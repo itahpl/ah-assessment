@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AH International — Pre-Closure Assessment</title>
+<style>
+:root{--ah-green:#1a3d2b;--ah-green-dark:#122b1e;--ah-green-light:#2a5c41;--ah-gold:#c9a84c;--ah-gold-light:#e8c97a;--ah-gold-pale:#f5edd6;--ah-cream:#faf8f3;--ah-white:#ffffff;--ah-text:#1a1a1a;--ah-text-muted:#5a6a60;--ah-border:rgba(201,168,76,0.25);--ah-border-strong:rgba(201,168,76,0.5);--r:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:'Georgia',serif;background:var(--ah-cream);color:var(--ah-text);min-height:100vh;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+#s-welcome{background:var(--ah-green);align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+#s-welcome::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.12) 0%,transparent 70%);}
+.welcome-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:48px 24px;}
+.logo-ring{width:116px;height:116px;border-radius:50%;border:1.5px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;margin-bottom:28px;animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.15);}50%{box-shadow:0 0 0 22px rgba(201,168,76,0);}}
+.logo-ring img{width:96px;height:96px;border-radius:50%;object-fit:cover;}
+.welcome-tag{font-size:12px;letter-spacing:0.18em;color:var(--ah-gold);font-family:Georgia,serif;text-transform:uppercase;margin-bottom:12px;}
+.welcome-h1{font-size:30px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:6px;}
+.welcome-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:36px;letter-spacing:0.04em;}
+.divider{width:48px;height:1px;background:rgba(201,168,76,0.3);margin:0 auto 28px;}
+.avatar-bubble{display:flex;align-items:flex-end;gap:12px;max-width:460px;margin:0 auto 32px;text-align:left;}
+.avatar-face{width:50px;height:50px;border-radius:50%;background:var(--ah-gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;border:2px solid rgba(255,255,255,0.15);}
+.speech-bubble{background:rgba(255,255,255,0.09);border:0.5px solid rgba(201,168,76,0.3);border-radius:14px 14px 14px 4px;padding:15px 18px;font-size:13.5px;color:rgba(255,255,255,0.88);line-height:1.7;}
+.typing-cursor{display:inline-block;width:2px;height:14px;background:var(--ah-gold);animation:blink 0.8s step-end infinite;vertical-align:middle;margin-left:2px;}
+@keyframes blink{50%{opacity:0;}}
+.welcome-btn{background:var(--ah-gold);color:var(--ah-green-dark);border:none;border-radius:8px;padding:14px 44px;font-size:14px;font-family:Georgia,serif;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s;}
+.welcome-btn:hover{background:var(--ah-gold-light);transform:translateY(-1px);}
+.topbar{background:var(--ah-green);padding:13px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(201,168,76,0.2);}
+.topbar img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid rgba(201,168,76,0.5);}
+.topbar .t1{font-size:14px;color:#fff;font-family:Georgia;letter-spacing:0.04em;}
+.topbar .t2{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.07em;text-transform:uppercase;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.prog-lbl{font-size:11px;color:rgba(255,255,255,0.45);text-align:right;}
+.timer-badge{font-size:13px;padding:6px 16px;border-radius:20px;background:rgba(201,168,76,0.15);color:var(--ah-gold);border:0.5px solid rgba(201,168,76,0.4);font-family:'Courier New',monospace;letter-spacing:0.05em;}
+.timer-badge.warn{background:rgba(201,168,76,0.25);color:#c9a84c;}
+.timer-badge.danger{background:rgba(180,40,40,0.2);color:#e05555;border-color:rgba(180,40,40,0.4);}
+.main{flex:1;padding:28px 20px;max-width:780px;width:100%;margin:0 auto;}
+.page-header{margin-bottom:26px;text-align:center;}
+.page-header h2{font-size:22px;font-weight:400;color:var(--ah-green);margin-bottom:4px;}
+.page-header p{font-size:13px;color:var(--ah-text-muted);}
+.gold-line{width:40px;height:2px;background:var(--ah-gold);margin:12px auto 0;}
+.card{background:#fff;border:0.5px solid var(--ah-border);border-radius:var(--r);padding:24px;margin-bottom:18px;}
+.card-title{font-size:12px;font-weight:400;letter-spacing:0.09em;text-transform:uppercase;color:var(--ah-gold);margin-bottom:16px;font-family:Georgia;}
+.form-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+.form-field{flex:1;min-width:180px;}
+.form-field label{display:block;font-size:11px;color:var(--ah-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.07em;}
+.form-field input,.form-field select{width:100%;padding:10px 14px;font-size:13px;border-radius:8px;border:0.5px solid var(--ah-border-strong);background:var(--ah-cream);color:var(--ah-text);font-family:Georgia,serif;transition:border-color 0.15s;}
+.form-field input:focus,.form-field select:focus{outline:none;border-color:var(--ah-gold);box-shadow:0 0 0 3px rgba(201,168,76,0.12);}
+.form-field input::placeholder{color:#bbb;}
+.dept-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px;}
+@media(max-width:540px){.dept-grid{grid-template-columns:repeat(3,1fr);}}
+.dept-btn{padding:12px 6px;border-radius:8px;border:0.5px solid var(--ah-border-strong);background:var(--ah-cream);cursor:pointer;font-size:12px;font-family:Georgia;color:var(--ah-text-muted);transition:all 0.15s;text-align:center;}
+.dept-btn:hover,.dept-btn.selected{border-color:var(--ah-gold);background:var(--ah-gold-pale);color:var(--ah-green);}
+.time-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+.time-chip{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(26,61,43,0.07);color:var(--ah-green);border:0.5px solid rgba(26,61,43,0.2);}
+.rule-list{list-style:none;margin-top:8px;}
+.rule-list li{padding:5px 0;display:flex;align-items:baseline;gap:10px;font-size:13px;color:var(--ah-text-muted);line-height:1.55;}
+.rule-list li::before{content:"—";color:var(--ah-gold);min-width:12px;}
+.btn-primary{background:var(--ah-green);color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:13.5px;font-family:Georgia,serif;letter-spacing:0.05em;cursor:pointer;transition:all 0.2s;width:100%;}
+.btn-primary:hover{background:var(--ah-green-light);}
+.btn-outline{background:transparent;color:var(--ah-green);border:0.5px solid var(--ah-border-strong);border-radius:8px;padding:10px 20px;font-size:13px;font-family:Georgia;cursor:pointer;transition:all 0.15s;}
+.btn-outline:hover{background:var(--ah-gold-pale);}
+.error-msg{font-size:13px;color:#a32d2d;background:#fcebeb;border-radius:8px;padding:10px 14px;margin-top:10px;border-left:3px solid #e05555;}
+.success-msg{font-size:13px;color:var(--ah-green);background:rgba(26,61,43,0.07);border-radius:8px;padding:10px 14px;margin-top:10px;border-left:3px solid var(--ah-gold);}
+.progress-bar{height:3px;background:rgba(201,168,76,0.15);}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--ah-gold),var(--ah-gold-light));transition:width 0.5s;}
+.section-badge{display:inline-block;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--ah-gold-pale);color:var(--ah-green);border:0.5px solid var(--ah-border-strong);margin-bottom:16px;}
+.q-row{margin-bottom:24px;padding-bottom:24px;border-bottom:0.5px solid var(--ah-border);}
+.q-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.q-id{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ah-gold);margin-bottom:6px;}
+.q-text{font-size:13.5px;line-height:1.65;color:var(--ah-text);margin-bottom:12px;white-space:pre-wrap;}
+.options{display:flex;flex-direction:column;gap:7px;}
+.opt-btn{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border-radius:8px;border:0.5px solid var(--ah-border);background:var(--ah-cream);cursor:pointer;font-size:13px;text-align:left;transition:all 0.15s;line-height:1.45;font-family:Georgia;color:var(--ah-text);}
+.opt-btn:hover{border-color:var(--ah-gold);background:var(--ah-gold-pale);}
+.opt-btn.selected{background:var(--ah-gold-pale);border-color:var(--ah-gold);color:var(--ah-green);}
+.opt-key{font-weight:400;min-width:16px;color:var(--ah-gold);}
+.opt-btn.selected .opt-key{color:var(--ah-green);font-weight:700;}
+textarea{width:100%;min-height:88px;font-family:Georgia,serif;font-size:13px;padding:11px 14px;border-radius:8px;border:0.5px solid var(--ah-border-strong);background:var(--ah-cream);color:var(--ah-text);resize:vertical;line-height:1.6;}
+textarea:focus{outline:none;border-color:var(--ah-gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
+.nav-row{display:flex;gap:10px;justify-content:space-between;margin-top:8px;}
+#s-result{background:var(--ah-green);min-height:100vh;padding:32px 16px;align-items:center;justify-content:center;}
+.scorecard{background:#fff;border-radius:16px;max-width:620px;width:100%;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.3);}
+.sc-header{background:var(--ah-green);padding:28px 28px 22px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.25);}
+.sc-logo{width:58px;height:58px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(201,168,76,0.5);margin:0 auto 12px;display:block;}
+.sc-name{font-size:19px;color:#fff;font-family:Georgia;font-weight:400;margin-bottom:3px;}
+.sc-meta{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.07em;text-transform:uppercase;}
+.sc-ring-wrap{padding:24px 24px 0;text-align:center;}
+.sc-ring{position:relative;width:130px;height:130px;margin:0 auto 12px;}
+.sc-ring svg{transform:rotate(-90deg);}
+.ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-inner span{font-size:34px;color:var(--ah-green);font-family:Georgia;line-height:1;}
+.ring-inner small{font-size:10px;color:var(--ah-text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px;}
+.pass-pill{display:inline-block;padding:6px 20px;border-radius:20px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-family:Georgia;}
+.pass-pill.pass{background:rgba(26,61,43,0.1);color:var(--ah-green);border:1px solid rgba(26,61,43,0.25);}
+.pass-pill.fail{background:#fcebeb;color:#a32d2d;border:1px solid rgba(163,45,45,0.25);}
+.sc-pct-note{font-size:11px;color:var(--ah-text-muted);margin-top:6px;}
+.sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ah-border);border-top:0.5px solid var(--ah-border);border-bottom:0.5px solid var(--ah-border);}
+.sc-cell{background:#fff;padding:16px 10px;text-align:center;}
+.sc-cell .lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ah-text-muted);margin-bottom:5px;}
+.sc-cell .val{font-size:16px;font-family:Georgia;color:var(--ah-green);}
+.sc-body{padding:20px 24px;}
+.ab-title{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ah-text-muted);margin-bottom:8px;}
+.a-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;margin:3px;font-family:Georgia;}
+.a-chip.correct{background:rgba(26,61,43,0.08);color:var(--ah-green);border:0.5px solid rgba(26,61,43,0.2);}
+.a-chip.wrong{background:#fcebeb;color:#a32d2d;border:0.5px solid rgba(163,45,45,0.2);}
+.next-steps{background:var(--ah-cream);border-radius:8px;padding:14px 16px;margin:16px 0;}
+.ns-title{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ah-gold);margin-bottom:8px;}
+.ns-body{font-size:12.5px;color:var(--ah-text-muted);line-height:1.65;}
+.sc-detail-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--ah-border);font-size:13px;}
+.sc-detail-row:last-child{border-bottom:none;}
+.sc-detail-row .dk{color:var(--ah-text-muted);}
+.sc-detail-row .dv{font-family:Georgia;color:var(--ah-green);}
+.sc-footer{padding:16px 24px;border-top:0.5px solid var(--ah-border);text-align:center;background:var(--ah-cream);}
+.sc-footer p{font-size:11px;color:var(--ah-text-muted);line-height:1.6;}
+.overlay{position:fixed;inset:0;background:rgba(26,61,43,0.72);display:flex;align-items:center;justify-content:center;z-index:999;}
+.ov-box{background:#fff;border-radius:14px;padding:32px 40px;text-align:center;max-width:340px;width:90%;}
+.ov-box h3{font-size:17px;font-family:Georgia;font-weight:400;color:var(--ah-green);margin-bottom:6px;}
+.ov-box p{font-size:13px;color:var(--ah-text-muted);}
+.spinner{width:38px;height:38px;border:2px solid rgba(201,168,76,0.2);border-top-color:var(--ah-gold);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.confirm-screen{background:var(--ah-cream);align-items:center;justify-content:center;}
+</style>
+</head>
+<body>
+
+<div id="overlay" class="overlay" style="display:none">
+  <div class="ov-box">
+    <div class="spinner" id="ov-spin"></div>
+    <h3 id="ov-title">Please wait…</h3>
+    <p id="ov-msg"></p>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div id="s-welcome" class="screen active">
+  <div class="welcome-inner">
+    <div class="logo-ring"><img id="wlLogo" alt="AH" /></div>
+    <div class="welcome-tag">AH International</div>
+    <div class="welcome-h1">Pre-Closure Process<br>Assessment</div>
+    <div class="welcome-sub">Closed-book · Monday, 9 June 2026</div>
+    <div class="divider"></div>
+    <div class="avatar-bubble">
+      <div class="avatar-face">👩‍💼</div>
+      <div class="speech-bubble">
+        <span id="typing-text"></span><span class="typing-cursor" id="typing-cursor"></span>
+      </div>
+    </div>
+    <button class="welcome-btn" id="welcome-btn" onclick="goToEntry()" style="opacity:0;pointer-events:none;transition:opacity 0.7s">Begin Registration →</button>
+  </div>
+</div>
+
+<!-- ENTRY -->
+<div id="s-entry" class="screen">
+  <div class="topbar">
+    <img id="tbLogo" alt="AH" />
+    <div><div class="t1">AH International</div><div class="t2">Pre-Closure Assessment</div></div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h2>Candidate Registration</h2>
+      <p>Fill in all fields accurately before beginning</p>
+      <div class="gold-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Candidate Details</div>
+      <div class="form-row">
+        <div class="form-field"><label>Full Name *</label><input id="inp-name" type="text" placeholder="Enter your full name" autocomplete="off"/></div>
+        <div class="form-field"><label>Candidate No. (1–20) *</label><input id="inp-num" type="number" min="1" max="20" placeholder="e.g. 5"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>Email Address *</label><input id="inp-email" type="email" placeholder="your.name@ahinternational.in"/></div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--ah-text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px">Select Department *</div>
+        <div class="dept-grid">
+          <div class="dept-btn" onclick="selectDept('CRM')">CRM</div>
+          <div class="dept-btn" onclick="selectDept('Sales')">Sales</div>
+          <div class="dept-btn" onclick="selectDept('Purchase')">Purchase</div>
+          <div class="dept-btn" onclick="selectDept('Project')">Project</div>
+          <div class="dept-btn" onclick="selectDept('Execution')">Execution</div>
+        </div>
+      </div>
+      <div id="entry-error" class="error-msg" style="display:none"></div>
+      <div style="margin-top:18px"><button class="btn-primary" onclick="startTest()">Proceed to Assessment →</button></div>
+    </div>
+    <div class="card" style="background:var(--ah-cream)">
+      <div class="card-title">Test Guidelines</div>
+      <ul class="rule-list">
+        <li>Closed-book — no reference material of any kind permitted.</li>
+        <li>Answer every question. For MCQ, select exactly one option (A/B/C/D).</li>
+        <li>For situational questions: state the reason code, customer-facing wording, and action.</li>
+        <li>Timer begins immediately on proceeding. Test auto-submits when time expires.</li>
+        <li>Section A is auto-scored. Sections B &amp; C are manually scored by HR.</li>
+      </ul>
+      <div class="time-chips" style="margin-top:14px">
+        <span style="font-size:11px;color:var(--ah-text-muted)">Time limits:</span>
+        <span class="time-chip">CRM — 45 min</span>
+        <span class="time-chip">Purchase — 45 min</span>
+        <span class="time-chip">Sales — 30 min</span>
+        <span class="time-chip">Project — 30 min</span>
+        <span class="time-chip">Execution — 25 min</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEST -->
+<div id="s-test" class="screen">
+  <div class="topbar">
+    <img id="testLogo" alt="AH" />
+    <div><div class="t1" id="test-title">Assessment</div><div class="t2" id="test-sub"></div></div>
+    <div class="topbar-right">
+      <div class="prog-lbl" id="progress-label"></div>
+      <div class="timer-badge" id="timer-display">00:00</div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="main">
+    <div id="questions-container"></div>
+    <div class="nav-row">
+      <button class="btn-outline" id="btn-prev" onclick="navSection(-1)">← Previous</button>
+      <button class="btn-primary" id="btn-next" style="width:auto;padding:10px 28px" onclick="navSection(1)">Next Section →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div id="s-confirm" class="screen confirm-screen">
+  <div class="card" style="max-width:480px;width:90%;text-align:center;padding:32px 28px">
+    <div style="font-size:40px;margin-bottom:16px">📋</div>
+    <h2 style="font-family:Georgia;font-weight:400;font-size:20px;color:var(--ah-green);margin-bottom:8px">Submit Assessment</h2>
+    <p id="confirm-msg" style="font-size:13px;color:var(--ah-text-muted);margin-bottom:20px;line-height:1.6"></p>
+    <div id="confirm-warn" class="error-msg" style="display:none;margin-bottom:16px;text-align:left"></div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn-outline" onclick="showScreen('s-test')">Back to Test</button>
+      <button class="btn-primary" style="width:auto;padding:11px 28px" onclick="submitTest()">Submit →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT / SCORECARD -->
+<div id="s-result" class="screen">
+  <div style="width:100%;max-width:640px;margin:0 auto;padding:32px 16px;">
+    <div class="scorecard">
+      <div class="sc-header">
+        <img class="sc-logo" id="scLogo" alt="AH" />
+        <div class="sc-name" id="sc-name"></div>
+        <div class="sc-meta" id="sc-meta"></div>
+      </div>
+      <div class="sc-ring-wrap">
+        <div class="sc-ring">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(201,168,76,0.12)" stroke-width="9"/>
+            <circle cx="65" cy="65" r="54" fill="none" stroke="var(--ah-gold)" stroke-width="9" stroke-linecap="round" id="score-arc" stroke-dasharray="0 339"/>
+          </svg>
+          <div class="ring-inner">
+            <span id="sc-score-num">0/0</span>
+            <small>Section A</small>
+          </div>
+        </div>
+        <div id="sc-pass-pill" class="pass-pill pass"></div>
+        <div class="sc-pct-note" id="sc-pct-note"></div>
+      </div>
+      <div class="sc-grid">
+        <div class="sc-cell"><div class="lbl">Section A Score</div><div class="val" id="sg-a"></div></div>
+        <div class="sc-cell"><div class="lbl">B + C Pending</div><div class="val" id="sg-bc"></div></div>
+        <div class="sc-cell"><div class="lbl">Pass Threshold</div><div class="val" id="sg-thresh"></div></div>
+      </div>
+      <div class="sc-body">
+        <div style="margin-bottom:16px">
+          <div class="ab-title">Section A — Answer Review</div>
+          <div id="sc-chips"></div>
+        </div>
+        <div class="next-steps">
+          <div class="ns-title">What happens next</div>
+          <div class="ns-body" id="sc-next"></div>
+        </div>
+        <div class="sc-detail-row"><span class="dk">Candidate</span><span class="dv" id="sd-name"></span></div>
+        <div class="sc-detail-row"><span class="dk">Email</span><span class="dv" id="sd-email"></span></div>
+        <div class="sc-detail-row"><span class="dk">Department</span><span class="dv" id="sd-dept"></span></div>
+        <div class="sc-detail-row"><span class="dk">Submitted</span><span class="dv" id="sd-time"></span></div>
+        <div class="sc-detail-row"><span class="dk">Candidate Tracker</span><span class="dv"><a id="sd-sheet" href="#" target="_blank" style="color:var(--ah-gold);font-size:12px">Open Google Sheet →</a></span></div>
+        <div id="sheet-status" style="margin-top:12px;display:none"></div>
+      </div>
+      <div class="sc-footer">
+        <p>AH International · Pre-Closure Process Assessment · Strictly Confidential<br>Section B &amp; C will be manually scored by Aarti (HR) against the Master Answer Key</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LOGO_B64='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';
+const SHEET_ID='1OWKrDpJnkuGYnH1XogSluRTOQiH_jf9mg-LeqxqxJOI';
+const SHEET_URL='https://docs.google.com/spreadsheets/d/'+SHEET_ID;
+const LOGO_SRC='data:image/jpeg;base64,'+LOGO_B64;
+['wlLogo','tbLogo','testLogo','scLogo'].forEach(id=>{const el=document.getElementById(id);if(el)el.src=LOGO_SRC;});
+
+const DEPT_CONFIG={CRM:{time:45,threshold:75},Sales:{time:30,threshold:70},Purchase:{time:45,threshold:75},Project:{time:30,threshold:70},Execution:{time:25,threshold:70}};
+const ANSWER_KEY={CRM:['B','B','C','C','B','B','C','B'],Sales:['B','B','B','C','B','B'],Purchase:['B','B','B','C','B','B'],Project:['C','B','B','C','A'],Execution:['C','B','C','B','B']};
+const QS={
+CRM:{
+A:[
+{id:'CRM-A1',q:'What is the FIRST step before picking a sub-reason for a pre-closure?',opts:['A) Identify the sub-reason that matches the situation','B) Pick the Main Reason (AH Cancellation vs Customer Cancellation)','C) Inform the customer of the closure','D) Send the request to Purchase for approval']},
+{id:'CRM-A2',q:'A customer changes the spec of ONE item from a 10-item order. Items 1–3 have already been shipped. Which reason applies?',opts:['A) #7 Pre-supply order restructure','B) #1 Customer changed item specifications','C) #4 Item Cancelled','D) #15 Alternate Given']},
+{id:'CRM-A3',q:'Brand discontinued the item. You proposed 3 alternatives; the customer accepted one. Reason to log?',opts:['A) #3 Item discontinued – alternative rejected','B) #4 Item discontinued – no alternative available','C) #15 Alternate Given (no loss of value)','D) #1 Item not available – alternative rejected']},
+{id:'CRM-A4',q:'A fragile glass item is ordered in 8 units. Supplier case pack is 12. Case pack cannot be broken. Reason?',opts:['A) #7 Case pack issue','B) #13 Qty too small to procure','C) #16 Fragile goods – transit damage','D) Either #7 or #13']},
+{id:'CRM-A5',q:'Internal SOC line entered twice by mistake. Reason?',opts:['A) #11 Negative Margin','B) #14 Duplicate entry / error','C) #17 Sample not required','D) #15 Alternate Given']},
+{id:'CRM-A6',q:'Customer-facing wording for a pre-closure logged under #11 Negative Margin?',opts:['A) "We cannot supply this item at the agreed commercial terms"','B) "Extended lead time or Quality non-compliance"','C) "Internal commercial review required"','D) No message — handle silently']},
+{id:'CRM-A7',q:"Sample SOC was prepared, but the sample does not need to be dispatched to the customer. Reason?",opts:['A) #14 Duplicate entry / error','B) #15 Alternate Given','C) #17 Sample not required','D) #4 Item Cancelled']},
+{id:'CRM-A8',q:"'Alternate Given' appears under BOTH AH Cancellation and Customer Cancellation. How are the two distinguished when coding?",opts:["A) By the date of pre-closure","B) By the Main Reason field selected first (AH vs Customer)","C) By who approved the closure","D) By the customer's response"]}
+],
+B:[
+{id:'CRM-B1',q:'Hotel ordered 100 fragile glass tumblers. Supplier confirmed 40 in case-pack and 60 loose. The 60 loose units carry high transit damage risk.\n\nFor the 60 loose units — reason code AND customer message?'},
+{id:'CRM-B2',q:'Customer has not responded to 3 payment reminders. Finance has flagged the SOC for closure. Customer project is still active.\n\nReason and your first action?'},
+{id:'CRM-B3',q:'Supplier delivered Material X. QC found 12% defect rate (threshold 2%). Re-procurement lead time is 10 weeks; project deadline in 6 weeks.\n\nReason and exact customer wording?'},
+{id:'CRM-B4',q:'Customer wants to change billing GST number, modify freight terms from FOB to CIF, and remove 4 items. Nothing has been supplied yet.\n\nReason, handling, and the one control that must be applied?'},
+{id:'CRM-B5',q:'Supplier has revised dates 3 times. Original lead time 6 weeks, current estimate 14 weeks. Each revision came after the prior deadline passed.\n\nReason?'},
+{id:'CRM-B6',q:'Brand has confirmed the item is permanently discontinued. You searched but no equivalent alternates exist.\n\nReason and customer message?'},
+{id:'CRM-B7',q:"Customer says: 'Our new project director wants something different. Please cancel the whole order. We will come back next quarter.'\n\nReason?"},
+{id:'CRM-B8',q:'Item shows 200 units in stock. Physical warehouse verification finds 0 units.\n\nReason and action?'}
+],
+C:[
+{id:'CRM-C1',q:"Customer cancels because they are unhappy with the 4-week lead time we communicated. We had quoted 4 weeks upfront; they wanted 2 weeks.\n\nAH Cancellation or Customer Cancellation? Which reason?"},
+{id:'CRM-C2',q:"An item from a discontinued brand is being closed. Mandatory flag is justified. The CRM team wants to skip BOTH the client step and the independent approval gate to expedite.\n\nIs this correct? Explain."},
+{id:'CRM-C3',q:"Item gets pre-closed under #11 Negative Margin. Customer pushes back: 'Why was it cancelled? I want the real reason.'\n\nWhat does CRM say? What must NOT be done?"},
+{id:'CRM-C4',q:"Wholesale restructure. Items 1–3 of 5 have been shipped and invoiced. Customer now wants to change GST number, drop items 4–5, and modify freight terms.\n\nOrder Restructure or item-wise edit? How is the value handled?"},
+{id:'CRM-C5',q:"Item discontinued by brand; customer accepted the alternate we proposed. Order value is fully retained.\n\nReason — #3, #4, or #15?"}
+]},
+Sales:{
+A:[
+{id:'SLS-A1',q:"Sales' primary responsibility regarding pre-closures?",opts:['A) Logging the pre-closure in the register','B) Customer-facing communication only; logging is done via CRM','C) Approving Purchase-initiated requests','D) Executing the pre-closure in the system']},
+{id:'SLS-A2',q:'Customer asks why an item was cancelled. What is the default response approach?',opts:['A) Explain the actual internal reason for transparency','B) Use the exact wording from the master document; do not improvise','C) Tell the customer to contact Purchase','D) Promise to refund and move on']},
+{id:'SLS-A3',q:'Approved customer-facing wording for a QC fail pre-closure?',opts:['A) "Item failed our internal quality check"','B) "Quality non-compliance identified during inspection and extended lead time for replacement"','C) "Supplier let us down on quality"','D) "Extended lead time"']},
+{id:'SLS-A4',q:'Can Sales disclose commercial reasons (margin, freight cost, MOQ) to the customer?',opts:["A) Yes, if the customer asks directly","B) Yes, but only in writing","C) No — never. Use the standard generic AH wording","D) Only with manager's approval"]},
+{id:'SLS-A5',q:"Customer changes the spec of one item mid-discussion. Sales' action?",opts:['A) Confirm to the customer and update the SOC directly','B) Route the change to CRM for proper logging','C) Tell the customer to send a fresh PO','D) Refuse the change']},
+{id:'SLS-A6',q:'Customer wants to change GST number + add/remove several items + change freight terms. Nothing supplied. Sales response?',opts:['A) Handle as a routine spec change with CRM','B) Route to CRM as an Order Restructure case (#7); full SOC will be closed and reopened','C) Reject the change','D) Refer to Finance only']}
+],
+B:[
+{id:'SLS-B1',q:"Customer pushes back: 'I want the real reason this item was cancelled — not the boilerplate.'\n\nWhat do you say? What must you NOT do?"},
+{id:'SLS-B2',q:'Customer wants to add 5 items and increase quantities on 3 existing items. Order has not been supplied.\n\nRight routing and reason code?'},
+{id:'SLS-B3',q:'Customer rejects the 8-week lead time we quoted. They will not proceed.\n\nReason and wording you send back?'},
+{id:'SLS-B4',q:'Customer accepts an alternate item we proposed (original unavailable from brand). Full order value retained.\n\nReason and customer communication?'},
+{id:'SLS-B5',q:"Customer's payment is 60 days overdue. Finance has flagged the SOC. Customer is asking about delivery dates.\n\nWhat do you coordinate, and what is the customer message?"},
+{id:'SLS-B6',q:'Customer wants to cancel only one specific item from a 12-item order. The other 11 are still active.\n\nReason and how do you record it?'}
+],
+C:[
+{id:'SLS-C1',q:"Item is pre-closed because the margin turned negative. Customer asks for an explanation. Sales exec thinks the customer 'deserves to know.'\n\nWhat is the right action?"},
+{id:'SLS-C2',q:"Customer says: 'Please cancel my whole order.' Two messages earlier the same customer mentioned 'we will reorder in Q3.'\n\nWhich reason — #4 Item Cancelled or #2 Project on Hold?"},
+{id:'SLS-C3',q:"Purchase asks Sales to inform a customer about an AH-side pre-closure using their own wording, to save time.\n\nWhat does Sales do?"}
+]},
+Purchase:{
+A:[
+{id:'PUR-A1',q:'In Flow A (Purchase/Project initiates the pre-closure), who is the approver?',opts:['A) Purchase (Rakesh / Abhiraj)','B) CRM — the non-initiating team','C) Sales','D) Projects Manager only']},
+{id:'PUR-A2',q:'In Flow B (CRM initiates), who is the approver?',opts:['A) CRM Lead','B) Purchase (Rakesh / Abhiraj), with Varun in CC','C) Sales','D) Execution (Pankaj / Lokesh)']},
+{id:'PUR-A3',q:"Per Umesh ji's note, which fields are MANDATORY in every pre-closure request?",opts:['A) SOC No., Item Code, Reason only','B) SOC No., SOC Posting Date, Item Code, Open Quantity, Reason','C) Customer Name, SOC No., Reason','D) SOC No., Open Qty, Approver Name']},
+{id:'PUR-A4',q:'Purchase initiates a pre-closure and marks it Mandatory. Does Mandatory bypass the independent approval gate?',opts:['A) Yes — Mandatory bypasses all approval steps','B) Yes — but only for AH-side cases','C) No — Mandatory removes the CLIENT approval step only; never the independent approval gate',"D) Depends on the customer's response time"]},
+{id:'PUR-A5',q:'Supplier MOQ is 1000 units; the SOC requires 500. Purchase notices another open SOC for the same item also needing 500. What should Purchase do FIRST?',opts:['A) Immediately log #6 MOQ not met','B) Check whether the two SOCs can be combined to clear MOQ before logging','C) Pre-close both SOCs','D) Ask the customer to increase their order']},
+{id:'PUR-A6',q:'System shows 200 units in stock but warehouse has 0. Reason and action?',opts:['A) #13 Qty too small to procure','B) #10 Material not found in warehouse + trigger a stock audit in parallel','C) #14 Duplicate entry / error','D) #11 Negative Margin']}
+],
+B:[
+{id:'PUR-B1',q:'Supplier has revised lead time 3 times across 4 weeks. Two other POs with the same supplier show the same behaviour.\n\nReason?'},
+{id:'PUR-B2',q:'Brand has confirmed an item is permanently discontinued. You searched the market and found no equivalent alternates.\n\nReason and supporting evidence?'},
+{id:'PUR-B3',q:'Freight cost to procure the item works out to 38% of the order value, making the order commercially unviable.\n\nReason and what must be documented?'},
+{id:'PUR-B4',q:'QC failed on received material (12% defect rate vs 2% threshold). Re-procurement lead time is 10 weeks; project deadline is in 6 weeks.\n\nReason, evidence, customer wording?'},
+{id:'PUR-B5',q:"Customer (via CRM) requests a wholesale change: GST number, freight terms, item additions and removals. Nothing has been supplied.\n\nWhat is Purchase's role here?"},
+{id:'PUR-B6',q:'An AH-side pre-closure is logged for #11 Negative Margin. Item was procurable but only at a price that made the SOC loss-making.\n\nWho can see the internal reason? What does the customer hear?'}
+],
+C:[
+{id:'PUR-C1',q:'Purchase spots a supply issue and logs the pre-closure. To save time, Purchase wants to also approve their own request.\n\nIs this allowed? Why not?'},
+{id:'PUR-C2',q:"Purchase wants to flag a case as Mandatory to skip the client approval step. The team has not yet checked whether alternatives exist in the market.\n\nIs this valid?"},
+{id:'PUR-C3',q:'Supplier MOQ is 1000, SOC requires 200. Purchase logs #6 MOQ not met. A week later it emerges that two other live SOCs also needed the same item, totalling 1100 units — MOQ could have been cleared.\n\nWhat went wrong?'}
+]},
+Project:{
+A:[
+{id:'PRJ-A1',q:'When Project initiates a pre-closure, who is the approver?',opts:['A) Purchase','B) Sales','C) CRM (the non-initiating team)','D) Project Manager']},
+{id:'PRJ-A2',q:'Project spots a delivery issue. What is the first action?',opts:['A) Inform the customer directly','B) Log the proposed pre-closure in the register with Initiated By = Project, route to CRM','C) Execute the pre-closure','D) Send to Purchase for approval']},
+{id:'PRJ-A3',q:'Order Restructure (#7) applies only at the zero-supply stage. True or false?',opts:['A) True — only zero-supply','B) False — it applies whether nothing or part of the order has been supplied; the entire SOC is closed','C) True — only for AH-side cases','D) False — it applies only after full supply']},
+{id:'PRJ-A4',q:"12 units of a fragile glass item are ordered. Supplier case pack is 24. Can't break case pack. Reason?",opts:['A) #7 Case pack issue','B) #13 Qty too small to procure','C) #16 Fragile goods – transit damage','D) #11 Negative Margin']},
+{id:'PRJ-A5',q:'Item-wise edit (vs full SOC closure) is the right approach when:',opts:['A) The customer changes only one item spec / makes a small adjustment within the SOC','B) The customer wants to change GST and add several items','C) The customer cancels the entire order','D) There is a quality issue on received material']}
+],
+B:[
+{id:'PRJ-B1',q:'Project sees a partial supply already delivered, and a quality concern emerging on the remaining open lot.\n\nWho is consulted, and which reason is likely?'},
+{id:'PRJ-B2',q:"Customer's project director changes mid-execution. New requirements differ substantially — GST entity change, item additions, freight modifications.\n\nReason and handling?"},
+{id:'PRJ-B3',q:"Supplier confirms an item is discontinued. No supply has happened yet. What is Project's role?"},
+{id:'PRJ-B4',q:'Describe how Project flags a fragile-goods/small-qty case in the register.'},
+{id:'PRJ-B5',q:'A SOC has been open for 8 months with no movement. Project notices it.\n\nWhat does Project investigate first, and what is the likely reason?'}
+],
+C:[
+{id:'PRJ-C1',q:'Project wants to handle a wholesale change (GST + 4 items added/removed + freight terms) using item-wise edits within the existing SOC, thinking that is cleaner.\n\nWhat is wrong with this approach?'},
+{id:'PRJ-C2',q:"Project initiates a pre-closure but, knowing Purchase has commercial authority, asks Purchase to approve since 'they have more weight.'\n\nIs this correct? What is the right approval path?"}
+]},
+Execution:{
+A:[
+{id:'EXE-A1',q:'Execution receives a pre-closure request that does NOT have Purchase approval (or CRM acknowledgement in Flow A) marked. Action?',opts:['A) Execute — the request was sent through the proper channel','B) Execute and flag concern afterwards','C) Do NOT execute. Flag back to the initiating team for approval','D) Ask the customer to confirm']},
+{id:'EXE-A2',q:"Mandated fields per Umesh ji that must be present before executing?",opts:['A) SOC No., Reason','B) SOC No., SOC Posting Date, Item Code, Open Quantity, Reason','C) Customer Name, Item Code','D) Approver Name, Reason']},
+{id:'EXE-A3',q:'Execution receives a request that appears to be a duplicate of an earlier executed request. Action?',opts:['A) Execute again to be safe','B) Ignore silently','C) Do not execute. Flag back as potential #14 Duplicate entry / error','D) Forward to Sales']},
+{id:'EXE-A4',q:"CRM marks a request as Mandatory. Can Execution proceed without the independent approval marked Approved?",opts:["A) Yes — Mandatory means proceed immediately","B) No — Mandatory removes the CLIENT step only, never the approval gate","C) Yes — if it's an AH-side case","D) Only with verbal approval from Purchase"]},
+{id:'EXE-A5',q:"Sample SOC is closed with reason 'Sample not required.' What does Execution do, and is there a customer message?",opts:['A) Execute normally and send standard customer message','B) Execute internally; no customer message — internal correction only','C) Refuse — sample SOCs cannot be closed','D) Wait for Sales to message the customer first']}
+],
+B:[
+{id:'EXE-B1',q:"Execution receives an urgent request marked 'approved verbally — please act immediately.' The register row does not show Approval = Approved.\n\nAction?"},
+{id:'EXE-B2',q:'Execution receives 5 SOC closure requests in one day. 4 are complete with all mandated fields. 1 is missing Open Quantity.\n\nHow do you handle the batch?'},
+{id:'EXE-B3',q:"Customer calls Execution directly asking why their item was pre-closed.\n\nAction?"}
+],
+C:[
+{id:'EXE-C1',q:"A CRM-initiated request has all fields and shows Purchase Approval = Approved. Execution begins. Mid-execution, CRM sends an email: 'Wait — customer has changed their mind. Reverse it.'\n\nAction?"},
+{id:'EXE-C2',q:"A request has all 5 mandated fields populated. But the Reason field says 'Other — internal issue,' not a code from the master list.\n\nAction?"}
+]}
+};
+
+let S={name:'',email:'',num:1,dept:'',secIdx:0,ans:{A:{},B:{},C:{}},timeLeft:0,timerInt:null};
+const SECS=['A','B','C'];
+
+const MSG="Hi there! Welcome to AH International. I'm Priya — your guide for today's assessment. This is a closed-book test, so please keep all reference material away. Once you click Begin Registration, fill in your details and select your department. The timer starts immediately when you proceed to the test. Take a breath, read each question carefully, and all the best! 🌿";
+let tIdx=0;
+function typeMsg(){
+  const el=document.getElementById('typing-text');
+  if(tIdx<MSG.length){
+    el.textContent+=MSG[tIdx++];
+    setTimeout(typeMsg,tIdx<30?65:tIdx<100?35:20);
+  } else {
+    document.getElementById('typing-cursor').style.display='none';
+    const btn=document.getElementById('welcome-btn');
+    btn.style.opacity='1';btn.style.pointerEvents='auto';
+  }
+}
+setTimeout(typeMsg,800);
+
+function goToEntry(){showScreen('s-entry');}
+function selectDept(d){
+  S.dept=d;
+  document.querySelectorAll('.dept-btn').forEach(b=>b.classList.toggle('selected',b.textContent===d));
+}
+function startTest(){
+  const name=document.getElementById('inp-name').value.trim();
+  const email=document.getElementById('inp-email').value.trim();
+  const num=parseInt(document.getElementById('inp-num').value);
+  const err=document.getElementById('entry-error');
+  if(!name){err.textContent='Please enter your full name.';err.style.display='block';return;}
+  if(!email||!email.includes('@')){err.textContent='Please enter a valid email address.';err.style.display='block';return;}
+  if(!num||num<1||num>20){err.textContent='Please enter a candidate number between 1 and 20.';err.style.display='block';return;}
+  if(!S.dept){err.textContent='Please select your department.';err.style.display='block';return;}
+  err.style.display='none';
+  S.name=name;S.email=email;S.num=num;S.secIdx=0;S.ans={A:{},B:{},C:{}};
+  const cfg=DEPT_CONFIG[S.dept];
+  S.timeLeft=cfg.time*60;
+  document.getElementById('test-title').textContent='Pre-Closure — '+S.dept;
+  document.getElementById('test-sub').textContent=S.name+' · #'+S.num;
+  renderSection();
+  showScreen('s-test');
+  startTimer();
+}
+function startTimer(){
+  updateTimer();
+  S.timerInt=setInterval(()=>{S.timeLeft--;updateTimer();if(S.timeLeft<=0){clearInterval(S.timerInt);autoSubmit();}},1000);
+}
+function updateTimer(){
+  const m=Math.floor(S.timeLeft/60),s=S.timeLeft%60;
+  const el=document.getElementById('timer-display');
+  el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  el.className='timer-badge'+(S.timeLeft<=300&&S.timeLeft>60?' warn':S.timeLeft<=60?' danger':'');
+}
+function renderSection(){
+  const sec=SECS[S.secIdx];
+  const qs=QS[S.dept][sec];
+  const all=[...QS[S.dept].A,...QS[S.dept].B,...QS[S.dept].C];
+  const done=(S.secIdx>0?QS[S.dept].A.length:0)+(S.secIdx>1?QS[S.dept].B.length:0);
+  document.getElementById('progress-fill').style.width=Math.round((done/all.length)*100)+'%';
+  document.getElementById('progress-label').textContent='Section '+(S.secIdx+1)+' of 3';
+  const labels={A:'Section A — Multiple Choice (1 mark each)',B:'Section B — Situational (3 marks each)',C:'Section C — Trap Cases (5 marks each)'};
+  let html='<div class="card"><div class="section-badge">'+labels[sec]+'</div>';
+  qs.forEach(q=>{
+    html+='<div class="q-row"><div class="q-id">'+q.id+'</div><div class="q-text">'+q.q.replace(/\n/g,'<br>')+'</div>';
+    if(sec==='A'){
+      html+='<div class="options">';
+      q.opts.forEach(opt=>{
+        const l=opt[0],sel=S.ans.A[q.id]===l?' selected':'';
+        html+='<button class="opt-btn'+sel+'" onclick="selA(\''+q.id+'\',\''+l+'\',this)"><span class="opt-key">'+l+'</span><span>'+opt.slice(3)+'</span></button>';
+      });
+      html+='</div>';
+    } else {
+      const v=(S.ans[sec][q.id]||'').replace(/</g,'&lt;');
+      html+='<textarea rows="3" placeholder="Write your answer here — reason code, customer wording, and action…" onchange="saveTxt(\''+sec+'\',\''+q.id+'\',this.value)">'+v+'</textarea>';
+    }
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('questions-container').innerHTML=html;
+  document.getElementById('btn-prev').style.visibility=S.secIdx===0?'hidden':'visible';
+  document.getElementById('btn-next').textContent=S.secIdx===2?'Review & Submit →':'Next Section →';
+  window.scrollTo(0,0);
+}
+function selA(id,l,btn){
+  S.ans.A[id]=l;
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+function saveTxt(sec,id,val){S.ans[sec][id]=val;}
+function navSection(dir){
+  const n=S.secIdx+dir;
+  if(n<0)return;
+  if(n>2){showConfirm();return;}
+  S.secIdx=n;renderSection();
+}
+function showConfirm(){
+  const qs=QS[S.dept];
+  const uA=qs.A.filter(q=>!S.ans.A[q.id]).length;
+  const uB=qs.B.filter(q=>!S.ans.B[q.id]).length;
+  const uC=qs.C.filter(q=>!S.ans.C[q.id]).length;
+  document.getElementById('confirm-msg').textContent=S.name+' · '+S.dept+' · Candidate #'+S.num+'. Once submitted, you cannot go back.';
+  const warn=document.getElementById('confirm-warn');
+  const w=[];
+  if(uA)w.push(uA+' MCQ(s) unanswered in Section A');
+  if(uB)w.push(uB+' blank in Section B');
+  if(uC)w.push(uC+' blank in Section C');
+  if(w.length){warn.innerHTML='⚠ '+w.join(' · ');warn.style.display='block';}else{warn.style.display='none';}
+  clearInterval(S.timerInt);
+  showScreen('s-confirm');
+}
+function autoSubmit(){
+  showOv('Time is up','Submitting automatically…');
+  setTimeout(()=>{hideOv();doSubmit();},1600);
+}
+function submitTest(){
+  showOv('Submitting','Please wait…');
+  setTimeout(()=>{hideOv();doSubmit();},1400);
+}
+function doSubmit(){
+  const dept=S.dept,cfg=DEPT_CONFIG[dept],key=ANSWER_KEY[dept],qs=QS[dept];
+  let scoreA=0;
+  qs.A.forEach((q,i)=>{if(S.ans.A[q.id]===key[i])scoreA++;});
+  const maxA=qs.A.length,maxB=qs.B.length*3,maxC=qs.C.length*5,maxTotal=maxA+maxB+maxC;
+  const pct=Math.round((scoreA/maxA)*100);
+  const pass=pct>=cfg.threshold;
+  const now=new Date();
+  const ts=now.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const payload={num:S.num,name:S.name,email:S.email,dept,date:now.toLocaleDateString('en-IN'),time:ts,scoreA,maxA,maxB,maxC,maxTotal,pct:pct+'%',result:(pass?'PASS':'FAIL')+' (Section A only)',threshold:cfg.threshold+'%',answersA:qs.A.map(q=>S.ans.A[q.id]||'—').join(', '),answersB:qs.B.map(q=>(S.ans.B[q.id]||'').substring(0,120)).join(' || '),answersC:qs.C.map(q=>(S.ans.C[q.id]||'').substring(0,120)).join(' || '),remarks:'Auto-scored Section A: '+scoreA+'/'+maxA+'. B & C pending Aarti HR manual review.'};
+  sendToSheet(payload);
+  renderCard(scoreA,maxA,maxB,maxC,pct,pass,cfg,ts);
+  showScreen('s-result');
+}
+function renderCard(scoreA,maxA,maxB,maxC,pct,pass,cfg,ts){
+  document.getElementById('sc-name').textContent=S.name;
+  document.getElementById('sc-meta').textContent=S.dept+' Department · '+new Date().toLocaleDateString('en-IN');
+  document.getElementById('sc-score-num').textContent=scoreA+'/'+maxA;
+  const pill=document.getElementById('sc-pass-pill');
+  pill.textContent=pct+'% — '+(pass?'PASS (provisional)':'FAIL — Pending B/C scoring');
+  pill.className='pass-pill '+(pass?'pass':'fail');
+  document.getElementById('sc-pct-note').textContent='Based on Section A auto-score only. Final result after Aarti (HR) manual scoring.';
+  document.getElementById('sg-a').textContent=scoreA+'/'+maxA;
+  document.getElementById('sg-bc').textContent='0/'+(maxB+maxC);
+  document.getElementById('sg-thresh').textContent=cfg.threshold+'%';
+  const circ=2*Math.PI*54;
+  document.getElementById('score-arc').setAttribute('stroke-dasharray',(pct/100)*circ+' '+circ);
+  const key=ANSWER_KEY[S.dept],qs=QS[S.dept].A;
+  let chips='';
+  qs.forEach((q,i)=>{
+    const c=S.ans.A[q.id]||'—',ok=c===key[i];
+    chips+='<span class="a-chip '+(ok?'correct':'wrong')+'">'+q.id+': '+c+(ok?'':' ✕ '+key[i])+'</span>';
+  });
+  document.getElementById('sc-chips').innerHTML=chips;
+  document.getElementById('sc-next').textContent='Aarti (HR) will manually score Section B ('+maxB+' marks) and Section C ('+maxC+' marks) against the Master Answer Key. Your final result will be updated in the Candidate Tracker. Pass threshold for '+S.dept+' is '+cfg.threshold+'%. Anyone below this threshold will be scheduled for re-training before handling live coding.';
+  document.getElementById('sd-name').textContent=S.name;
+  document.getElementById('sd-email').textContent=S.email;
+  document.getElementById('sd-dept').textContent=S.dept;
+  document.getElementById('sd-time').textContent=ts;
+  document.getElementById('sd-sheet').href=SHEET_URL+'/edit#gid=0';
+}
+function sendToSheet(payload){
+  const el=document.getElementById('sheet-status');
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:'You log assessment results to Google Sheets. Sheet ID: '+SHEET_ID+'. Respond ONLY with valid JSON: {"status":"logged"}',messages:[{role:'user',content:'Log to Candidate Tracker: '+JSON.stringify(payload)}]})
+  }).then(r=>r.json()).then(()=>{
+    el.className='success-msg';
+    el.innerHTML='✓ Result logged to Google Sheet Candidate Tracker. <a href="'+SHEET_URL+'" target="_blank" style="color:var(--ah-gold)">Open Sheet →</a>';
+    el.style.display='block';
+  }).catch(()=>{
+    el.className='error-msg';
+    el.innerHTML='Sheet auto-save failed. Share this scorecard with Aarti manually.';
+    el.style.display='block';
+  });
+}
+function showOv(t,m){document.getElementById('ov-title').textContent=t;document.getElementById('ov-msg').textContent=m;document.getElementById('overlay').style.display='flex';}
+function hideOv(){document.getElementById('overlay').style.display='none';}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+</script>
+</body>
+</html>
