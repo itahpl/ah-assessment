@@ -588,6 +588,23 @@ function sendToSheet(payload){
 function showOv(t,m){document.getElementById('ov-title').textContent=t;document.getElementById('ov-msg').textContent=m;document.getElementById('overlay').style.display='flex';}
 function hideOv(){document.getElementById('overlay').style.display='none';}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+
+// Auto-select department from URL param e.g. ?dept=CRM
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var d = params.get('dept');
+  if(d && ['CRM','Sales','Purchase','Project','Execution'].indexOf(d) !== -1){
+    window.addEventListener('DOMContentLoaded', function(){
+      selectDept(d);
+      // Also pre-hide welcome btn delay
+      setTimeout(function(){
+        var btn = document.getElementById('welcome-btn');
+        if(btn){ btn.style.opacity='1'; btn.style.pointerEvents='auto'; }
+      }, 500);
+    });
+  }
+})();
+
 </script>
 </body>
 </html>
